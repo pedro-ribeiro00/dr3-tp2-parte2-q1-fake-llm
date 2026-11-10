@@ -1,48 +1,39 @@
-# Chatbot com Fake LLM
+# Parte 2 - Questão 1: Fake LLM
 
-DR3 - TP2. Python 3.11 ou 3.12. Execute os comandos dentro desta pasta.
+## Como executar
 
-## Instalação
+Use Python 3.11 ou 3.12. Dentro desta pasta, crie um ambiente e instale as dependências:
 
 ```bash
 python -m venv .venv
-# Linux/macOS:
-source .venv/bin/activate
-# Windows PowerShell: .venv\Scripts\Activate.ps1
-python -m pip install -r requirements.txt
 ```
 
-## Execução
+Ative o ambiente:
 
 ```bash
-uvicorn main:app --host 127.0.0.1 --port 8000
+# Linux ou macOS
+source .venv/bin/activate
+# Windows PowerShell
+.venv\Scripts\Activate.ps1
 ```
 
-Abra http://127.0.0.1:8000/docs para testar pelo Swagger. Pare uma aplicação antes de iniciar outra na mesma porta. O endpoint `/health` confirma que o startup terminou.
+```bash
+python -m pip install -r requirements.txt
+uvicorn main:app --port 8000
+```
+
+Abra http://127.0.0.1:8000/docs, selecione POST /chat, clique em “Try it out” e envie:
+
+```json
+{"text": "qual é o seu nome?"}
+```
+
+Também é possível enviar pelo terminal (no Windows, use curl.exe):
 
 ```bash
 curl -X POST http://127.0.0.1:8000/chat -H "Content-Type: application/json" -d '{"text":"qual é o seu nome?"}'
 ```
 
-No PowerShell, use o Swagger ou `curl.exe`. Entrada inválida retorna 422. Falhas de serviço são documentadas no código. Não há autenticação pública: executar como protótipo local.
+Execute uma aplicação por vez na porta 8000. Textos vazios são recusados com erro 422.
 
-## Testes
-
-```bash
-python -m pytest -q
-```
-
-Os testes de contrato substituem a inferência para validar HTTP sem download nem cobrança. Eles não medem qualidade do modelo. Consulte `VALIDACAO.md` na raiz da entrega para as verificações realmente executadas.
-
-Para repetir as versões diretas usadas na validação, instale `requirements-testadas.txt` no lugar de `requirements.txt`. Os pacotes transitivos ainda são resolvidos pelo pip.
-
-## Formato de saída
-
-Exemplo ilustrativo; gerações reais podem variar.
-
-```json
-{
-  "answer": "Sou um chatbot de demonstração com Fake LLM.",
-  "simulated": true
-}
-```
+Perguntas disponíveis: “olá”, “qual é o seu nome?” e “o que é fastapi?”. Outras entradas recebem uma resposta padrão. O FakeListLLM simula a resposta; não há chamada a um modelo real. A resposta tem o campo `answer`.
